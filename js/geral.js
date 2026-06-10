@@ -1,23 +1,68 @@
 const dataInicio = new Date("2024-07-13T00:00:00");
+const elemento = document.getElementById("texto-digitado");
 
-function atualizarContador() {
+let animacaoConcluida = false;
+
+function atualizarTexto() {
   const agora = new Date();
 
-  const diferenca = agora - dataInicio;
+  let meses =
+    (agora.getFullYear() - dataInicio.getFullYear()) * 12 +
+    (agora.getMonth() - dataInicio.getMonth());
 
-  const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+  let dataMesAtual = new Date(dataInicio);
+  dataMesAtual.setMonth(dataMesAtual.getMonth() + meses);
+
+  if (dataMesAtual > agora) {
+    meses--;
+    dataMesAtual = new Date(dataInicio);
+    dataMesAtual.setMonth(dataMesAtual.getMonth() + meses);
+  }
+
+  const restante = agora - dataMesAtual;
+
+  const dias = Math.floor(restante / (1000 * 60 * 60 * 24));
   const horas = Math.floor(
-    (diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    (restante % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
   );
-  const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
-  const segundos = Math.floor((diferenca % (1000 * 60)) / 1000);
+  const minutos = Math.floor((restante % (1000 * 60 * 60)) / (1000 * 60));
+  const segundos = Math.floor((restante % (1000 * 60)) / 1000);
 
-  document.getElementById("tempo-juntos").textContent =
-    `${dias} dias, ${horas} horas, ${minutos} minutos e ${segundos} segundos`;
+  return `Há ${meses} meses, ${dias} dias, ${horas} horas, ${minutos} minutos e ${segundos} segundos começou a melhor história da minha vida. ❤️`;
 }
 
-atualizarContador();
-setInterval(atualizarContador, 1000);
+function escreverTexto(texto) {
+  let i = 0;
+  elemento.textContent = "";
+
+  function digitar() {
+    if (i < texto.length) {
+      elemento.textContent += texto.charAt(i);
+      i++;
+      setTimeout(digitar, 40);
+    } else {
+      animacaoConcluida = true;
+
+      setInterval(() => {
+        elemento.textContent = atualizarTexto();
+      }, 1000);
+    }
+  }
+
+  digitar();
+}
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    if (entries[0].isIntersecting && !animacaoConcluida) {
+      escreverTexto(atualizarTexto());
+      observer.disconnect();
+    }
+  },
+  { threshold: 0.5 },
+);
+
+observer.observe(elemento);
 
 const imagens = document.querySelectorAll(".gallery-track img");
 
@@ -85,5 +130,15 @@ document.addEventListener("keydown", (e) => {
 
   if (e.key === "ArrowLeft") {
     anterior();
+  }
+});
+
+const header = document.querySelector(".main-header");
+
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 50) {
+    header.classList.add("scrolled");
+  } else {
+    header.classList.remove("scrolled");
   }
 });

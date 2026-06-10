@@ -30,6 +30,17 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.main-header.scrolled {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .header-left {
@@ -42,8 +53,7 @@ body {
   color: #e50914;
   font-size: 2.8rem;
   font-family: "Bebas Neue", sans-serif;
-  letter-spacing: 2px;
-  cursor: pointer;
+  letter-spacing: 4px;
 }
 
 .main-nav {
@@ -89,7 +99,7 @@ body {
   height: 86vh;
   background-image: url("../img/hero.jpeg");
   background-size: cover;
-  background-position: center;
+  background-position: 0 30%;
   position: relative;
   display: flex;
   align-items: center;
@@ -99,16 +109,39 @@ body {
 .hero-overlay {
   width: 100%;
   height: 100%;
-
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
   position: absolute;
   inset: 0;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(to top, #000, transparent);
+  z-index: 1;
 }
 
 .hero-content {
   max-width: 700px;
   position: relative;
   z-index: 2;
+  animation: fadeUp 3s ease;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hero-tag {
@@ -453,6 +486,7 @@ body {
     min-height: 85vh;
     padding: 30px 20px 60px;
     align-items: flex-start;
+    background-position: center;
   }
 
   .hero-content {
@@ -495,13 +529,41 @@ body {
     width: 100%;
   }
 
-  .contador-amor {
-    padding: 30px 20px;
+  .counter {
+    padding: 80px 20px;
+    text-align: center;
   }
 
-  #tempo-juntos {
-    font-size: 1.4rem;
+  .contador-amor {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  #texto-digitado {
+    font-family: var(--font-title);
+    font-size: 2.4rem;
+    color: white;
     line-height: 1.5;
+    min-height: 80px;
+  }
+
+  #texto-digitado::after {
+    content: "|";
+    color: var(--red-primary);
+    animation: piscar 0.8s infinite;
+  }
+
+  .contador-subtitulo {
+    display: block;
+    margin-top: 20px;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+  }
+
+  @keyframes piscar {
+    50% {
+      opacity: 0;
+    }
   }
 
   .episodes {
@@ -558,5 +620,12 @@ body {
 
   #progress {
     display: block;
+  }
+  #texto-digitado {
+    font-size: 1.8rem;
+  }
+
+  .contador-subtitulo {
+    font-size: 1rem;
   }
 }
